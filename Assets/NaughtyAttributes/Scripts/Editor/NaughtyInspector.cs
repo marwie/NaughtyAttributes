@@ -14,7 +14,10 @@ namespace NaughtyAttributes.Editor
 		private IEnumerable<FieldInfo> _nonSerializedFields;
 		private IEnumerable<PropertyInfo> _nativeProperties;
 		private IEnumerable<MethodInfo> _methods;
+		private bool _anyMethods, _anyNativeProperties;
 
+		private bool _anyNaughtyAttributes;
+		
 		protected virtual void OnEnable()
 		{
 			_nonSerializedFields = ReflectionUtility.GetAllFields(
@@ -22,9 +25,13 @@ namespace NaughtyAttributes.Editor
 
 			_nativeProperties = ReflectionUtility.GetAllProperties(
 				target, p => p.GetCustomAttributes(typeof(ShowNativePropertyAttribute), true).Length > 0);
+			_anyNativeProperties = _nativeProperties.Any();
 
 			_methods = ReflectionUtility.GetAllMethods(
 				target, m => m.GetCustomAttributes(typeof(ButtonAttribute), true).Length > 0);
+			_anyMethods = _methods.Any();
+			
+			_anyNaughtyAttribute = _serializedProperties.Any(p => PropertyUtility.GetAttribute<INaughtyAttribute>(p) != null);
 		}
 
 		protected virtual void OnDisable()
@@ -36,8 +43,7 @@ namespace NaughtyAttributes.Editor
 		{
 			GetSerializedProperties(ref _serializedProperties);
 
-			bool anyNaughtyAttribute = _serializedProperties.Any(p => PropertyUtility.GetAttribute<INaughtyAttribute>(p) != null);
-			if (!anyNaughtyAttribute)
+			if (!_anyNaughtyAttribute)
 			{
 				DrawDefaultInspector();
 			}
@@ -125,7 +131,7 @@ namespace NaughtyAttributes.Editor
 
 		protected void DrawNativeProperties()
 		{
-			if (_nativeProperties.Any())
+			if (_anyNativeProperties)
 			{
 				EditorGUILayout.Space();
 				EditorGUILayout.LabelField("Native Properties", GetHeaderGUIStyle());
@@ -141,7 +147,7 @@ namespace NaughtyAttributes.Editor
 
 		protected void DrawButtons()
 		{
-			if (_methods.Any())
+			if (_anyMethods))
 			{
 				EditorGUILayout.Space();
 				EditorGUILayout.LabelField("Buttons", GetHeaderGUIStyle());
