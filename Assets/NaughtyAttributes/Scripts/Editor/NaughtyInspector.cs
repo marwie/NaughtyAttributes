@@ -16,7 +16,7 @@ namespace NaughtyAttributes.Editor
 		private IEnumerable<MethodInfo> _methods;
 		private bool _anyMethods, _anyNativeProperties;
 
-		private bool _anyNaughtyAttributes;
+		private bool _anyNaughtyAttribute;
 		
 		protected virtual void OnEnable()
 		{
