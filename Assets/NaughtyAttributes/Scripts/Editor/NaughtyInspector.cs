@@ -147,7 +147,7 @@ namespace NaughtyAttributes.Editor
 
 		protected void DrawButtons()
 		{
-			if (_anyMethods))
+			if (_anyMethods)
 			{
 				EditorGUILayout.Space();
 				EditorGUILayout.LabelField("Buttons", GetHeaderGUIStyle());
